@@ -252,10 +252,10 @@ require('lazy').setup({
     opts = {
       signs = {
         add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
+        change = { text = 'Δ' },
+        delete = { text = 'x' },
         topdelete = { text = '‾' },
-        changedelete = { text = '~' },
+        changedelete = { text = 'Δ' },
       },
     },
   },
@@ -731,7 +731,7 @@ require('lazy').setup({
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<S-Space>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
