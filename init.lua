@@ -163,6 +163,12 @@ vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<CR>', { noremap = true,
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Easier brackets on german keyboards
+vim.keymap.set('n', 'ö', '{', { noremap = true })
+vim.keymap.set('n', 'ä', '}', { noremap = true })
+-- vim.keymap.set('n', '<C-8>', '[', { noremap = true })
+-- vim.keymap.set('n', '<C-9>', ']', { noremap = true })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
