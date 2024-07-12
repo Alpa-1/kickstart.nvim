@@ -212,6 +212,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Automatically format code on save for Python files
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*.py',
+  callback = function()
+    vim.cmd 'silent !black --quiet %'
+    vim.cmd 'edit'
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
