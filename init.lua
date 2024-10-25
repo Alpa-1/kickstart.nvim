@@ -1,6 +1,7 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -17,6 +18,9 @@ vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
+
+-- Recognize and keep the correct format
+vim.opt.fileformats = 'unix,dos'
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -85,8 +89,14 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Easier brackets on german keyboards
 vim.keymap.set('n', 'ö', '{', { noremap = true })
 vim.keymap.set('n', 'ä', '}', { noremap = true })
--- vim.keymap.set('n', '<C-8>', '[', { noremap = true })
--- vim.keymap.set('n', '<C-9>', ']', { noremap = true })
+vim.keymap.set('n', 'ü', '[', { noremap = true })
+vim.keymap.set('n', '+', ']', { noremap = true })
+
+-- Ufo folding shortcuts
+-- open line fold
+vim.keymap.set('n', 'Ö', 'zo', { noremap = true })
+-- close line fold
+vim.keymap.set('n', 'Ä', 'zc', { noremap = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -140,6 +150,33 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+local ufoHandler = function(virtText, lnum, endLnum, width, truncate)
+  local newVirtText = {}
+  local suffix = (' 󰁂 %d '):format(endLnum - lnum)
+  local sufWidth = vim.fn.strdisplaywidth(suffix)
+  local targetWidth = width - sufWidth
+  local curWidth = 0
+  for _, chunk in ipairs(virtText) do
+    local chunkText = chunk[1]
+    local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+    if targetWidth > curWidth + chunkWidth then
+      table.insert(newVirtText, chunk)
+    else
+      chunkText = truncate(chunkText, targetWidth - curWidth)
+      local hlGroup = chunk[2]
+      table.insert(newVirtText, { chunkText, hlGroup })
+      chunkWidth = vim.fn.strdisplaywidth(chunkText)
+      -- str width returned from truncate() may less than 2nd argument, need padding
+      if curWidth + chunkWidth < targetWidth then
+        suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+      end
+      break
+    end
+    curWidth = curWidth + chunkWidth
+  end
+  table.insert(newVirtText, { suffix, 'MoreMsg' })
+  return newVirtText
+end
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -175,13 +212,37 @@ require('lazy').setup({
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
-        add = { text = '+' },
-        change = { text = 'Δ' },
-        delete = { text = 'x' },
+        add = { text = '┃' },
+        change = { text = '┃' },
+        delete = { text = '_' },
         topdelete = { text = '‾' },
-        changedelete = { text = 'Δ' },
+        changedelete = { text = '~' },
+        untracked = { text = '┆' },
       },
     },
+  },
+
+  {
+    'kevinhwang91/nvim-ufo',
+    dependencies = {
+      'kevinhwang91/promise-async',
+    },
+    opts = {
+      filetype_exclude = { 'help', 'alpha', 'dashboard', 'neo-tree', 'Trouble', 'lazy', 'mason' },
+      fold_virt_text_handler = ufoHandler,
+    },
+    config = function(_, opts)
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('local_detach_ufo', { clear = true }),
+        pattern = opts.filetype_exclude,
+        callback = function()
+          require('ufo').detach()
+        end,
+      })
+
+      vim.opt.foldlevelstart = 99
+      require('ufo').setup(opts)
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -204,15 +265,6 @@ require('lazy').setup({
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
-
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
     end,
   },
 
@@ -234,7 +286,7 @@ require('lazy').setup({
 
         -- `build` is used to run some command when the plugin is installed/updated.
         -- This is only run then, not every time Neovim starts up.
-        build = 'zig cc',
+        -- build = 'zig cc',
 
         -- `cond` is a condition used to determine whether this plugin should be
         -- installed and loaded.
@@ -328,11 +380,6 @@ require('lazy').setup({
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
-  },
-
-  {
-    --- Github Copilot
-    'github/copilot.vim',
   },
 
   { -- LSP Configuration & Plugins
@@ -472,11 +519,10 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {},
-        pyright = {
+        gopls = {
           settings = {
-            pyright = {
-              disableOrganizeImports = true,
+            gopls = {
+              buildFlags = { '-tags=integration' },
             },
           },
         },
@@ -487,27 +533,8 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
-          init_options = {
-            plugins = {
-              {
-                name = '@vue/typescript-plugin',
-                location = 'C:/Users/mic/AppData/Roaming/npm/node_modules/@vue/language-server',
-                languages = { 'vue' },
-              },
-            },
-          },
-          filetypes = {
-            'vue',
-            'javascriptreact',
-            'javascript',
-            'typescriptreact',
-            'typescript',
-          },
-        },
-        html = { filetypes = { 'html', 'htmldjango' } },
-        volar = {},
-        ruff_lsp = {},
+        -- html = { filetypes = { 'html', 'htmldjango' } },
+        -- volar = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -702,16 +729,30 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'tokyonight.nvim',
+    -- 'tokyonight.nvim',
+    'rose-pine/neovim',
+    lazy = false,
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight'
+      -- vim.cmd.colorscheme 'tokyonight-storm'
+      vim.cmd.colorscheme 'rose-pine'
 
       -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.hi 'Comment gui=none'
+    end,
+    config = function()
+      require('rose-pine').setup {
+        dim_inactive_windows = true,
+        highlight_groups = {
+          Comment = { fg = '#44415a' },
+        },
+        styles = {
+          italic = false,
+        },
+      }
     end,
   },
 
@@ -739,29 +780,44 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
+      -- local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
+      -- @diagnostic disable-next-line: duplicate-set-field
+      -- statusline.section_location = function()
+      -- return '%2l:%2L'
+      -- end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+  { -- Statusline with less cryptic configuration
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    event = 'ColorScheme',
+    config = function()
+      require('lualine').setup {
+        options = {
+          --- @usage 'rose-pine' | 'rose-pine-alt'
+          theme = 'rose-pine',
+        },
+      }
+    end,
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    install = { prefer_git = false },
+
     opts = {
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
-      auto_install = true,
+      auto_install = false,
       highlight = {
         enable = true,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
