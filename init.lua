@@ -20,7 +20,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 -- Recognize and keep the correct format
-vim.opt.fileformats = 'unix,dos'
+vim.opt.fileformats = 'unix,mac'
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -91,6 +91,10 @@ vim.keymap.set('n', 'ö', '{', { noremap = true })
 vim.keymap.set('n', 'ä', '}', { noremap = true })
 vim.keymap.set('n', 'ü', '[', { noremap = true })
 vim.keymap.set('n', '+', ']', { noremap = true })
+vim.keymap.set('i', 'ö', '{', { noremap = true })
+vim.keymap.set('i', 'ä', '}', { noremap = true })
+vim.keymap.set('i', 'ü', '[', { noremap = true })
+vim.keymap.set('i', '+', ']', { noremap = true })
 
 -- Ufo folding shortcuts
 -- open line fold
@@ -523,6 +527,8 @@ require('lazy').setup({
           settings = {
             gopls = {
               buildFlags = { '-tags=integration' },
+              usePlaceholders = true,
+              completionDocumentation = true,
             },
           },
         },
@@ -840,6 +846,26 @@ require('lazy').setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+  },
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+      'nvim-lua/plenary.nvim',
+      'antoinemadec/FixCursorHold.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      { 'fredrikaverpil/neotest-golang', version = '*' }, -- Installation
+    },
+    config = function()
+      require('neotest').setup {
+        adapters = {
+          require 'neotest-golang', -- Registration
+        },
+      }
+    end,
+
+    vim.keymap.set('n', '<leader>tr', '<cmd>Neotest run<CR>', { desc = 'Run current Test' }),
+    vim.keymap.set('n', '<leader>ts', '<cmd>Neotest summary<CR>', { desc = 'Toggle Test Summary' }),
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
