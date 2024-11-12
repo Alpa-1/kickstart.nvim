@@ -86,15 +86,17 @@ vim.keymap.set('n', '<C-k>', '<cmd>cprev<CR>', { desc = 'Go to previous quickfix
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- MAC rebindings --
 -- Easier brackets on german keyboards
 vim.keymap.set('n', 'ö', '{', { noremap = true })
 vim.keymap.set('n', 'ä', '}', { noremap = true })
 vim.keymap.set('n', 'ü', '[', { noremap = true })
 vim.keymap.set('n', '+', ']', { noremap = true })
-vim.keymap.set('i', 'ö', '{', { noremap = true })
-vim.keymap.set('i', 'ä', '}', { noremap = true })
-vim.keymap.set('i', 'ü', '[', { noremap = true })
-vim.keymap.set('i', '+', ']', { noremap = true })
+vim.keymap.set('i', '|', '[', { noremap = true })
+vim.keymap.set('i', '≠', ']', { noremap = true })
+
+-- backslash
+vim.keymap.set('i', '¿', '\\', { noremap = true })
 
 -- Ufo folding shortcuts
 -- open line fold
