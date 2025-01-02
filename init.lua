@@ -90,10 +90,8 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Easier brackets on german keyboards
 vim.keymap.set('n', 'ö', '{', { noremap = true })
 vim.keymap.set('n', 'ä', '}', { noremap = true })
-vim.keymap.set('n', 'ü', '[', { noremap = true })
-vim.keymap.set('n', '+', ']', { noremap = true })
-vim.keymap.set('i', '|', '[', { noremap = true })
-vim.keymap.set('i', '≠', ']', { noremap = true })
+vim.keymap.set({ 'i', 'n' }, '⁄', '[', { noremap = true })
+vim.keymap.set({ 'i', 'n' }, 'ø', ']', { noremap = true })
 
 -- backslash
 vim.keymap.set('i', '¿', '\\', { noremap = true })
@@ -107,6 +105,8 @@ vim.keymap.set('n', 'Ä', 'zc', { noremap = true })
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '⁄d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', 'ød', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -183,6 +183,7 @@ local ufoHandler = function(virtText, lnum, endLnum, width, truncate)
   table.insert(newVirtText, { suffix, 'MoreMsg' })
   return newVirtText
 end
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
