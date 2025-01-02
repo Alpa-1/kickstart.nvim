@@ -96,6 +96,26 @@ vim.keymap.set({ 'i', 'n' }, 'ø', ']', { noremap = true })
 -- backslash
 vim.keymap.set('i', '¿', '\\', { noremap = true })
 
+-- formatted linebreak
+vim.keymap.set('n', '<S-h>', [[:lua BreakAndFormat()<CR>]], { noremap = true, silent = true })
+
+function BreakAndFormat()
+  local buf = vim.api.nvim_get_current_buf()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local line = vim.api.nvim_buf_get_lines(buf, row - 1, row, false)[1]
+  local next_space = line:find('%s', col + 1)
+  if not next_space then
+    print 'No whitespace found to the right of the cursor'
+    return
+  end
+  local before = line:sub(1, next_space - 1)
+  local after = line:sub(next_space + 1)
+  vim.api.nvim_buf_set_lines(buf, row - 1, row, false, { before, after })
+  vim.lsp.buf.format { async = false }
+  vim.cmd 'normal! j'
+  vim.cmd 'normal! ^'
+end
+
 -- Ufo folding shortcuts
 -- open line fold
 vim.keymap.set('n', 'Ö', 'zo', { noremap = true })
