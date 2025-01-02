@@ -372,12 +372,35 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+
+      -- live_grep_with_quickfix is a wrapper function to grep only the files in the quickfix list.
+      -- If the quickfix list is empty, falls back to default behavior.
+      local function live_grep_with_quickfix()
+        local qf_list = vim.fn.getqflist()
+
+        if #qf_list == 0 then
+          -- Quickfix is empty, call the normal `live_grep`
+          builtin.live_grep()
+        else
+          -- Quickfix has entries, restrict `live_grep` to those files
+          local files = {}
+          for _, item in ipairs(qf_list) do
+            table.insert(files, vim.api.nvim_buf_get_name(item.bufnr))
+          end
+
+          builtin.live_grep {
+            search_dirs = files,
+          }
+        end
+      end
+
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>sy', builtin.lsp_document_symbols, { desc = '[S]earch S[y]mbols' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sq', live_grep_with_quickfix, { desc = '[S]earch [Q]uickfix List' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
