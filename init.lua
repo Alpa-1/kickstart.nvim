@@ -913,7 +913,16 @@ require('lazy').setup({
     end,
 
     vim.keymap.set('n', '<leader>tr', '<cmd>Neotest run<CR>', { desc = 'Run current Test' }),
+    vim.keymap.set('n', '<leader>ta', '<cmd>Neotest run file<CR>', { desc = 'Run all Tests' }),
     vim.keymap.set('n', '<leader>ts', '<cmd>Neotest summary<CR>', { desc = 'Toggle Test Summary' }),
+    vim.keymap.set('n', '<leader>to', '<cmd>Neotest output<CR>', { desc = 'Show Test Output' }),
+    vim.keymap.set('n', '<leader>tw', '<cmd>Neotest attach<CR>', { desc = 'Watch current Test' }),
+    vim.keymap.set('n', '<leader>tn', function()
+      require('neotest').jump.next { status = 'failed' }
+    end, { desc = 'Jump next failed' }),
+    vim.keymap.set('n', '<leader>tb', function()
+      require('neotest').jump.prev { status = 'failed' }
+    end, { desc = 'Jump prev failed' }),
   },
   {
     'ray-x/lsp_signature.nvim',
