@@ -77,6 +77,7 @@ vim.opt.scrolloff = 10
 vim.keymap.set('n', '<C-E>', '<C-^>', { desc = 'Switch to alternate file' })
 vim.keymap.set('n', '<C-p>', '<cmd>Telescope find_files<CR>', { desc = 'Find files using Telescope' })
 vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>lr', ':set relativenumber!<CR>', { noremap = true, silent = true })
 
 -- Quickfix Navigation
 vim.keymap.set('n', '<C-j>', '<cmd>cnext<CR>', { desc = 'Go to next quickfix item' })
