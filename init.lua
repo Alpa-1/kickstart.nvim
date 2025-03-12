@@ -864,6 +864,9 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    require 'kickstart.plugins.debug',
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
