@@ -802,7 +802,10 @@ require('lazy').setup({
       require('rose-pine').setup {
         dim_inactive_windows = true,
         highlight_groups = {
-          Comment = { fg = '#44415a' },
+          Comment = { fg = '#44415a', italic = true },
+          ['@property.go'] = { fg = '#f4a261' },
+          ['@type.go'] = { italic = true },
+          ['@module.go'] = { italic = true },
         },
         styles = {
           italic = false,
