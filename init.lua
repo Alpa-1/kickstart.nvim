@@ -135,6 +135,26 @@ vim.keymap.set('n', 'ød', vim.diagnostic.goto_next, { desc = 'Go to next [D]iag
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+local function smart_o()
+  -- 1) Find next opening bracket followed by optional whitespace and matching closing bracket (wrap around)
+  local pat = [[\((\s*)\|{\s*}\|\[\s*\]\|<\s*>\)]]
+  local row, col = unpack(vim.fn.searchpos(pat, 'W'))
+  if row == 0 then
+    -- no bracket found → fallback to normal ‘o’
+    return vim.cmd 'normal! o'
+  end
+
+  -- 2) Move cursor onto the bracket
+  vim.api.nvim_win_set_cursor(0, { row, col })
+
+  -- 3) Split the bracket pair by inserting a newline:
+  local cmd = vim.api.nvim_replace_termcodes('i<CR><Esc>ko', true, false, true)
+  vim.api.nvim_feedkeys(cmd, 'n', false)
+end
+
+-- Map it: <leader>o opens an indented line inside the next bracket
+vim.keymap.set('n', '<leader>o', smart_o, { desc = 'Smart open line inside next bracket' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
