@@ -87,6 +87,10 @@ vim.keymap.set('n', '<C-k>', '<cmd>cprev<CR>', { desc = 'Go to previous quickfix
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Allow to maximize and reset window sizes more easily
+vim.keymap.set('n', '<C-w>+', '<C-w>|', { noremap = true })
+vim.keymap.set('n', '<C-w>0', '<C-w>=', { noremap = true })
+
 -- MAC rebindings --
 -- Easier brackets on german keyboards
 vim.keymap.set('n', 'ö', '{', { noremap = true })
