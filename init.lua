@@ -73,6 +73,22 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
+-- exit insert mode via quick jk
+vim.keymap.set('i', 'jk', '<esc>')
+
+-- resize split windows via arrows
+vim.keymap.set('n', '<down>', ':resize +2<cr>')
+vim.keymap.set('n', '<up>', ':resize -2<cr>')
+vim.keymap.set('n', '<right>', ':vertical resize +2<cr>')
+vim.keymap.set('n', '<left>', ':vertical resize -2<cr>')
+
+-- move lines in visual mode
+vim.keymap.set('v', 'J', ":m '>+1<cr>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<cr>gv=gv")
+
+-- move up and down in wrapped lines
+vim.keymap.set('n', 'j', "(v:count ? 'j' : 'gj')", { expr = true })
+vim.keymap.set('n', 'k', "(v:count ? 'k' : 'gk')", { expr = true })
 --  See `:help vim.keymap.set()`
 vim.keymap.set('n', '<C-E>', '<C-^>', { desc = 'Switch to alternate file' })
 vim.keymap.set('n', '<C-p>', '<cmd>Telescope find_files<CR>', { desc = 'Find files using Telescope' })
