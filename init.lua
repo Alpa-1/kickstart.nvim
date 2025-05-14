@@ -154,7 +154,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 local function smart_o()
   -- 1) Find next opening bracket followed by optional whitespace and matching closing bracket (wrap around)
   local pat = [[\((\s*)\|{\s*}\|\[\s*\]\|<\s*>\)]]
-  local row, col = unpack(vim.fn.searchpos(pat, 'W'))
+  local row, col = unpack(vim.fn.searchpos(pat, '', vim.fn.line '.'))
   if row == 0 then
     -- no bracket found → fallback to normal ‘o’
     return vim.cmd 'normal! o'
