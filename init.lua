@@ -904,6 +904,22 @@ require('lazy').setup({
           --- @usage 'rose-pine' | 'rose-pine-alt'
           theme = 'rose-pine',
         },
+        sections = {
+          lualine_b = {
+            {
+              'branch',
+              fmt = function(str)
+                if string.len(str) > 30 then
+                  return str:sub(1, 30) .. '…'
+                else
+                  return str:sub(1, 30)
+                end
+              end,
+            },
+            'diff',
+            'diagnostics',
+          },
+        },
       }
     end,
   },
