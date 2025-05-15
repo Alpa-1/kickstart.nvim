@@ -904,6 +904,7 @@ require('lazy').setup({
         options = {
           --- @usage 'rose-pine' | 'rose-pine-alt'
           theme = 'rose-pine',
+          globalstatus = true,
         },
       }
     end,
