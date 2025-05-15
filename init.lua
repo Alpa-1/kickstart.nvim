@@ -413,6 +413,8 @@ require('lazy').setup({
             i = { ['<c-enter>'] = 'to_fuzzy_refine', ['<C-k>'] = 'move_selection_previous', ['<C-j>'] = 'move_selection_next' },
             n = { ['<C-k>'] = 'move_selection_previous', ['<C-j>'] = 'move_selection_next' },
           },
+          layout_strategy = 'horizontal',
+          layout_config = { height = 0.95, width = 0.95, preview_width = 0.5 },
         },
         -- pickers = {}
         extensions = {
