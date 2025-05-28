@@ -89,6 +89,7 @@ vim.keymap.set('v', 'K', ":m '<-2<cr>gv=gv")
 -- move up and down in wrapped lines
 vim.keymap.set('n', 'j', "(v:count ? 'j' : 'gj')", { expr = true })
 vim.keymap.set('n', 'k', "(v:count ? 'k' : 'gk')", { expr = true })
+
 --  See `:help vim.keymap.set()`
 vim.keymap.set('n', '<C-E>', '<C-^>', { desc = 'Switch to alternate file' })
 vim.keymap.set('n', '<C-p>', '<cmd>Telescope find_files<CR>', { desc = 'Find files using Telescope' })
@@ -245,19 +246,7 @@ local ufoHandler = function(virtText, lnum, endLnum, width, truncate)
   return newVirtText
 end
 
--- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins you can run
---    :Lazy update
---
--- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
@@ -398,7 +387,7 @@ require('lazy').setup({
             n = { ['<C-k>'] = 'move_selection_previous', ['<C-j>'] = 'move_selection_next' },
           },
           layout_strategy = 'horizontal',
-          layout_config = { height = 0.95, width = 0.95, preview_width = 0.5 },
+          layout_config = { height = 0.95, width = 0.95 },
         },
         -- pickers = {}
         extensions = {
@@ -962,6 +951,25 @@ require('lazy').setup({
     end,
   },
   {
+    'codota/tabnine-nvim',
+    run = './dl_binaries.sh ' .. 'https://tabnine.stackit.run' .. '/update',
+    config = function()
+      require('tabnine').setup {
+        disable_auto_comment = true,
+        accept_keymap = '<Tab>',
+        dismiss_keymap = '<C-]>',
+        debounce_ms = 800,
+        suggestion_color = { gui = '#a6a6a6', cterm = 244 },
+        codelens_color = { gui = '#a6a6a6', cterm = 244 },
+        codelens_enabled = false,
+        exclude_filetypes = { 'TelescopePrompt', 'NvimTree' },
+        log_file_path = '/Users/sieglem/playground/tabnine.txt', -- absolute path to Tabnine log file,
+        tabnine_enterprise_host = 'https://tabnine.stackit.run',
+        ignore_certificate_errors = false,
+      }
+    end,
+  },
+  {
     'nvim-neotest/neotest',
     dependencies = {
       'nvim-neotest/nvim-nio',
@@ -999,17 +1007,9 @@ require('lazy').setup({
     end,
   },
 
-  -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
-  -- init.lua. If you want these files, they are in the repository, so you can just download them and
-  -- place them in the correct locations.
+      -- see below for full list of options 👇
+    },
 
-  -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  --
-  --  Here are some example plugins that I've included in the Kickstart repository.
-  --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
