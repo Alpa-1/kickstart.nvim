@@ -994,14 +994,13 @@ require('lazy').setup({
     config = function()
       require('tabnine').setup {
         disable_auto_comment = true,
-        accept_keymap = '<Tab>',
+        accept_keymap = '<C-a>',
         dismiss_keymap = '<C-]>',
         debounce_ms = 800,
         suggestion_color = { gui = '#a6a6a6', cterm = 244 },
         codelens_color = { gui = '#a6a6a6', cterm = 244 },
         codelens_enabled = false,
         exclude_filetypes = { 'TelescopePrompt', 'NvimTree' },
-        log_file_path = '/Users/sieglem/playground/tabnine.txt', -- absolute path to Tabnine log file,
         tabnine_enterprise_host = 'https://tabnine.stackit.run',
         ignore_certificate_errors = false,
       }
