@@ -275,6 +275,9 @@ require('lazy').setup({
   },
 
   {
+    'github/copilot.vim',
+  },
+  {
     'kevinhwang91/nvim-ufo',
     dependencies = {
       'kevinhwang91/promise-async',
