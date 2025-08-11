@@ -624,6 +624,30 @@ require('lazy').setup({
             },
           },
         },
+        ts_ls = {
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                -- install with npm install -g @vue/language-server
+                location = '/Users/sieglem/.nvm/versions/node/v22.16.0/lib/node_modules/@vue/language-server',
+                languages = { 'vue' },
+              },
+            },
+          },
+          filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        },
+        volar = {},
+        marksman = {},
+        pyright = {},
+        html = {},
+        cssls = {},
+        eslint = {},
+        jsonls = {
+          settings = {
+            json = { format = { enable = false }, validate = true },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -709,6 +733,8 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff-lsp' },
+        javascript = { 'prettier' },
+        vue = { 'prettier' },
 
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
