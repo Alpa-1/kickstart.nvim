@@ -1042,6 +1042,12 @@ require('lazy').setup({
       require('lsp_signature').setup(opts)
     end,
   },
+  {
+    'vinnymeller/swagger-preview.nvim',
+    cmd = { 'SwaggerPreview', 'SwaggerPreviewStop', 'SwaggerPreviewToggle' },
+    build = 'npm i',
+    config = true,
+  },
 
       -- see below for full list of options 👇
     },
