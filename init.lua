@@ -987,6 +987,17 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter',
       { 'fredrikaverpil/neotest-golang', version = '*' }, -- Installation
     },
+    keys = {
+    -- stylua: ignore start
+    { '<leader>tr', function() require('neotest').run.run() end, desc = 'Run Nearest Test' },
+    { '<leader>ta', function() require('neotest').run.run(vim.fn.expand('%')) end, desc = 'Run All Tests (File)' },
+    { '<leader>ts', function() require('neotest').summary.toggle() end, desc = 'Toggle Test Summary' },
+    { '<leader>to', function() require('neotest').output.open({ enter = true }) end, desc = 'Show Test Output' },
+    { '<leader>tw', function() require('neotest').watch.toggle(vim.fn.expand('%')) end, desc = 'Watch Current File' },
+    { '<leader>tn', function() require('neotest').jump.next({ status = 'failed' }) end, desc = 'Jump Next Failed' },
+    { '<leader>tb', function() require('neotest').jump.prev({ status = 'failed' }) end, desc = 'Jump Prev Failed' },
+      -- stylua: ignore end
+    },
     config = function()
       require('neotest').setup {
         adapters = {
@@ -994,18 +1005,6 @@ require('lazy').setup({
         },
       }
     end,
-
-    vim.keymap.set('n', '<leader>tr', '<cmd>Neotest run<CR>', { desc = 'Run current Test' }),
-    vim.keymap.set('n', '<leader>ta', '<cmd>Neotest run file<CR>', { desc = 'Run all Tests' }),
-    vim.keymap.set('n', '<leader>ts', '<cmd>Neotest summary<CR>', { desc = 'Toggle Test Summary' }),
-    vim.keymap.set('n', '<leader>to', '<cmd>Neotest output<CR>', { desc = 'Show Test Output' }),
-    vim.keymap.set('n', '<leader>tw', '<cmd>Neotest attach<CR>', { desc = 'Watch current Test' }),
-    vim.keymap.set('n', '<leader>tn', function()
-      require('neotest').jump.next { status = 'failed' }
-    end, { desc = 'Jump next failed' }),
-    vim.keymap.set('n', '<leader>tb', function()
-      require('neotest').jump.prev { status = 'failed' }
-    end, { desc = 'Jump prev failed' }),
   },
   {
     'ray-x/lsp_signature.nvim',
