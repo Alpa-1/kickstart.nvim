@@ -185,7 +185,6 @@ vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -574,6 +573,7 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          --
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -637,7 +637,6 @@ require('lazy').setup({
           },
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         },
-        volar = {},
         marksman = {},
         pyright = {},
         html = {},
@@ -1013,6 +1012,8 @@ require('lazy').setup({
       'nvim-lua/plenary.nvim',
       'antoinemadec/FixCursorHold.nvim',
       'nvim-treesitter/nvim-treesitter',
+      'thenbe/neotest-playwright',
+      'marilari88/neotest-vitest',
       { 'fredrikaverpil/neotest-golang', version = '*' }, -- Installation
     },
     keys = {
@@ -1029,7 +1030,14 @@ require('lazy').setup({
     config = function()
       require('neotest').setup {
         adapters = {
-          require 'neotest-golang', -- Registration
+          require 'neotest-golang',
+          require 'neotest-vitest',
+          require('neotest-playwright').adapter {
+            options = {
+              persist_project_selection = true,
+              enable_dynamic_test_discovery = true,
+            },
+          },
         },
       }
     end,
