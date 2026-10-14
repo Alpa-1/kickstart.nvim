@@ -99,7 +99,7 @@ return {
     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
     vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
     vim.keymap.set('n', '<leader>sy', builtin.lsp_document_symbols, { desc = '[S]earch S[y]mbols' })
-    vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+    -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
     vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
     vim.keymap.set('n', '<leader>sq', live_grep_with_quickfix, { desc = '[S]earch [Q]uickfix List' })
     vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -116,20 +116,20 @@ return {
         local buf = event.buf
 
         -- Find references for the word under your cursor.
-        vim.keymap.set('n', 'grr', builtin.lsp_references, { buffer = buf, desc = '[G]oto [R]eferences' })
+        vim.keymap.set('n', 'gr', builtin.lsp_references, { buffer = buf, desc = '[G]oto [R]eferences' })
 
         -- Jump to the implementation of the word under your cursor.
         -- Useful when your language has ways of declaring types without an actual implementation.
-        vim.keymap.set('n', 'gri', builtin.lsp_implementations, { buffer = buf, desc = '[G]oto [I]mplementation' })
+        vim.keymap.set('n', 'gi', builtin.lsp_implementations, { buffer = buf, desc = '[G]oto [I]mplementation' })
 
         -- Jump to the definition of the word under your cursor.
         -- This is where a variable was first declared, or where a function is defined, etc.
         -- To jump back, press <C-t>.
-        vim.keymap.set('n', 'grd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
+        vim.keymap.set('n', 'gd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
 
         -- Fuzzy find all the symbols in your current document.
         -- Symbols are things like variables, functions, types, etc.
-        vim.keymap.set('n', 'gO', builtin.lsp_document_symbols, { buffer = buf, desc = 'Open Document Symbols' })
+        vim.keymap.set('n', 'gD', builtin.lsp_document_symbols, { buffer = buf, desc = 'Open Document Symbols' })
 
         -- Fuzzy find all the symbols in your current workspace.
         -- Similar to document symbols, except searches over your entire project.
@@ -138,7 +138,7 @@ return {
         -- Jump to the type of the word under your cursor.
         -- Useful when you're not sure what type a variable is and you want to see
         -- the definition of its *type*, not where it was *defined*.
-        vim.keymap.set('n', 'grt', builtin.lsp_type_definitions, { buffer = buf, desc = '[G]oto [T]ype Definition' })
+        vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { buffer = buf, desc = '[G]oto [T]ype Definition' })
       end,
     })
 

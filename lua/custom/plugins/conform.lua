@@ -35,13 +35,22 @@ return {
     formatters_by_ft = {
       lua = { 'stylua' },
       javascript = { 'prettier' },
-      ts = { 'prettier' },
+      typescript = { 'prettier' },
       vue = { 'prettier' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+    },
+
+    formatters = {
+      prettier = {
+        -- Tells Conform to only run Prettier if it finds a config file
+        -- (.prettierrc, prettier.config.js, etc.) in the project root.
+        -- This prevents Prettier from running in projects where you don't want it.
+        require_cwd = true,
+      },
     },
   },
 }
